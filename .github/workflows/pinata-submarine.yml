@@ -1,4 +1,4 @@
-name: Typescript Library Starter
+name: pinata-submarine
 
 on: [push]
 
@@ -6,7 +6,7 @@ env:
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
-  typescript-library-starter:
+  pinata-submarine:
     runs-on: ubuntu-latest
 
     concurrency:
@@ -32,9 +32,6 @@ jobs:
 
       - name: Test
         run: npm run test
-
-      - name: Setup test
-        run: npm run test:setup
 
       - name: Release
         env:
