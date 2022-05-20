@@ -1,79 +1,496 @@
-# Typescript Library Starter
+# Pinata Submarine 
 
-![NPM](https://img.shields.io/npm/l/@gjuchault/typescript-library-starter)
-![NPM](https://img.shields.io/npm/v/@gjuchault/typescript-library-starter)
-![GitHub Workflow Status](https://github.com/gjuchault/typescript-library-starter/actions/workflows/typescript-library-starter.yml/badge.svg?branch=main)
+[Submarine](https://ipfs.submarine.me/ipfs/QmeveDgcyWtCLnQJHEAemY1JjB9ys1pJQMaxNGtTaY1frt)
 
-Yet another (opinionated) typescript library starter template.
+**Do not try to use this SDK in the browser or your Submarine API key will be exposed**
 
-## Opinions and limitations
+- [Pinata Submarine](#pinata-submarine)
+  - [What is this?](#what-is-this)
+  - [Getting Started](#getting-started)
+  - [Methods](#methods)
+    - [getSubmarinedContentByCid](#getsubmarinedcontentbycid)
+    - [getSubmarinedContent](#getsubmarinedcontent)
+    - [listFolderContent](#listfoldercontent)
+    - [generateAccessLink](#generateaccesslink)
+    - [uploadFileOrFolder](#uploadfileorfolder)
+    - [uploadJson](#uploadjson)
+    - [updateFileName](#updatefilename)
+    - [updateFileMetadata](#updatefilemetadata)
+    - [makeFilePublic](#makefilepublic)
+    - [deleteContent](#deletecontent)
+  - [Additional Info](#additional-info)
+    - [Querying Metadata](#querying-metadata)
 
-1. Relies as much as possible on each included library's defaults
-2. Only rely on GitHub Actions
-3. Do not include documentation generation
+## What is this?
 
-## Getting started
+Pinata Submarine started as a simple idea. What if you could prove something was what you said it was going to be before anyone could actually see the thing? This concept soon expanded as the [Pinata](https://pinata.cloud) team talked with customers (mostly those building in the NFT space). Almost universally, the biggest complaint people had was the inability to share private data with specific people. 
 
-1. `git clone git@github.com:gjuchault/typescript-library-starter.git my-project`
-2. `cd my-project`
-3. `npm install`
-4. `npm run setup`
+If an artist sold an NFT, how could they share a high-resolution version of the art without exposing it to the rest of the world? How could they do this in a way that was both a great user experience and verifiable? 
 
-Or click on `Use this template` button on GitHub!
+If a project or company wanted to share media with their company based on certain criteria, how could they do this? How could they combine NFT ownership with serving private media? How could they share links that would not suddenly expose the media to the public at large? And how could they do this while maintaining the cryptographically verifiable content identifier of the media that [IPFS](https://ipfs.io) (the protocol that powers Pinata and Submarine). 
 
-To enable deployment, you will need to:
+These interviews and these questions resulted in Pinata releasing the Submarine API. Months later, that API was used to build a non-technical creator's tool for using Submarine. It's called [submarine.me](https://submarine.me).
 
-1. Setup `NPM_TOKEN` secret in GitHub actions ([Settings > Secrets > Actions](https://github.com/gjuchault/typescript-service-starter/settings/secrets/actions))
-2. Give `GITHUB_TOKEN` write permissions for GitHub releases ([Settings > Actions > General](https://github.com/gjuchault/typescript-service-starter/settings/actions) > Workflow permissions)
+This SDK is designed to make working with the Pinata Submarine API so simple that any developer can build their own submarine.me. Or better yet, they can build something better. 
 
-## Features
+## Getting Started 
 
-### Node.js, npm version
+The first step is to install the Pinata Submarine SDK. 
 
-Typescript Library Starter relies on [volta](https://volta.sh/) to ensure node version to be consistent across developers. It's also used in the GitHub workflow file.
+Yarn: 
 
-### Typescript
+`yarn add pinata-submarine` 
 
-Leverages [esbuild](https://github.com/evanw/esbuild) for blazing fast builds, but keeps `tsc` to generate `.d.ts` files.
-Generates two builds to support both ESM and CJS.
+NPM: 
 
-Commands:
+`npm i pinata-submarine` 
 
-- `build`: runs typechecking then generates CJS, ESM and `d.ts` files in the `build/` directory
-- `clean`: removes the `build/` directory
-- `type:dts`: only generates `d.ts`
-- `type:check`: only run typechecking
-- `type:build`: only generates CJS and ESM
+Once installed, the SDK can be imported and used like this: 
 
-### Tests
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
 
-typescript-library-starter uses [ava](https://github.com/avajs/ava) and [esbuild-register](https://github.com/egoist/esbuild-register) so that there is no need to compile before the tests start running. The coverage is done through [nyc](https://github.com/istanbuljs/nyc).
+const findByCid = await submarine.getSubmarinedContentByCid("CID FOR SUBMARINED FILE");
+console.log(findByCid);
+```
 
-Commands:
+You'll notice this SDK requires the Pinata Submarine API Key and a Dedicated Gateway. These two things can only be had on paid Pinata accounts. 
 
-- `test`: runs ava test runner
-- `test:coverage`: runs ava test runner and generates coverage reports
+## Methods 
 
-### Format & lint
+### getSubmarinedContentByCid
 
-This template relies on the combination of [eslint](https://github.com/eslint/eslint) — through [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) for linting and [prettier](https://github.com/prettier/prettier) for formatting.
-It also uses [cspell](https://github.com/streetsidesoftware/cspell) to ensure spelling
+When searching for content that has previously been Submarined, this helper method makes it easy to find by passing in one argument—the CID.  
 
-Commands:
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
 
-- `format`: runs prettier with automatic fixing
-- `format:check`: runs prettier without automatic fixing (used in CI)
-- `lint`: runs eslint with automatic fixing
-- `lint:check`: runs eslint without automatic fixing (used in CI)
-- `spell:check`: runs spellchecking
+const content = await submarine.getSubmarinedContentByCid("YOUR CID");
+```
 
-### Releasing
+The response will look like this: 
 
-Under the hood, this library uses [semantic-release](https://github.com/semantic-release/semantic-release) and [commitizen](https://github.com/commitizen/cz-cli).
-The goal is to avoid manual release process. Using `semantic-release` will automatically create a github release (hence tags) as well as an npm release.
-Based on your commit history, `semantic-release` will automatically create a patch, feature or breaking release.
+```json
+{
+  "status": 200,
 
-Commands:
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T19:33:36.340Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+```
 
-- `cz`: interactive CLI that helps you generate a proper git commit message, using [commitizen](https://github.com/commitizen/cz-cli)
-- `semantic-release`: triggers a release (used in CI)
+### getSubmarinedContent
+
+This method is a more general purpose version of the previous one. It will allow paginating through a list of Submarined file, or it will allow you to pass through an options object that specifies parameters to use. 
+
+**Options**
+
+```ts
+type GetSubmarinedContentOptions = {
+  offset?: String
+  limit?: String
+  submarinedCid?: String
+  name?: String
+  originalName?: String
+  fileSizeMinimum?: String
+  fileSizeMaximum?: String
+  createdAtStart?: String
+  createdAtEnd?: String
+  metadata?: string
+  order?: String
+}
+```
+
+Each option is optional. Pass through as many or as few as you'd like. If you'd like to just list all content, pass through an empty object. 
+
+Object properties definitions: 
+
+`offset` - This represents how many items to skip when returning the results (useful for pagination)
+`limit` - This represents how many items to return (default = 50, max = 100)
+`submarinedCid` - A CID to search for
+`name` - A Submarined file's custom name to search for 
+`originalname` - A Submarined file's original file name from disk
+`fileSizeMinimum` - The minimum size of files to return (in bytes)
+`fileSizeMaximum` - The maximum size of files to return (in bytes)
+`createdAtStart` - The minimum created date for a file (ISO String format)
+`createdAtEnd` - The maximum created date for a file (ISO String format)
+`metadata` - See [metadata querying](#querying-metadata) for more info
+`order` - Order ascending or descending (value = ASC or DESC)
+
+**Example**
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const options = {
+  name: "Some file name"
+}
+
+const content = await submarine.getSubmarinedContent(options)
+```
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T19:33:36.340Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+```
+
+### listFolderContent
+
+When uploading folders, it is possible to query one level deep into those folders with this method. This method accepts one argument—the file's ID, not the CID. The below example shows how to get the ID by searching with the CID then uses the `listFolderContent` method to list the content in the folder.
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+const foundContent = await submarine.getSubmarinedContentByCid("YOUR CID");
+const folder = foundContent.items[0];
+const folderId = folder.id;
+
+const content = await submarine.listFolderContent(folderID);
+```
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T19:33:36.340Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+```
+
+### generateAccessLink
+
+When sharing Submarined content, you must use a link that is made up of your Dedicated Gateway URL, the Submarined file's CID, and an access token. This method allows you to generate an access token that is valid for as many seconds as you specify. It requires both the CID and the ID of the file. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const folder = foundContent.items[0];
+const folderId = folder.id;
+const timeInSeconds = 3600 //one hour
+
+const link = await submarine.generateAccessLink(timeInSeconds, id, cid);
+```
+
+The response will look like this: 
+
+```
+GATEWAY_URL/ipfs/CID?accessToken=TOKEN
+```
+
+This method also takes an optional path argument. If you pass in the file path (which is the file name of a file within the folder), the access token will be generated for the whole folder, but the link will be specific to that one file. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const path = "image.png";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const folder = foundContent.items[0];
+const folderId = folder.id;
+const timeInSeconds = 3600 //one hour
+
+const link = await submarine.generateAccessLink(timeInSeconds, id, cid, path);
+```
+
+The response will look like this: 
+
+```
+GATEWAY_URL/ipfs/CID/path?accessToken=TOKEN
+```
+
+If you have uploaded a website or a web app, there will be an `index.html` file in the folder. You do not need to specify the path to load your site or app. This method will automatically look for an `index.html` file and generate a link that loads the full site or app. 
+
+### uploadFileOrFolder
+
+This method expects a filepath. Since this SDK should only be used in the Node.js environment, the expectation is your client has already uploaded the file to you and you are storing it either in memory or in a temp directory on disk. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const res = await submarine.uploadFileOrFolder("./yourFilePath.some_extension");
+```
+
+The method optionally allows you to pass in a custom name for the file and specify the [CID version](https://docs.ipfs.io/concepts/content-addressing/) (0 or 1 in number format).
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T20:01:26.679Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+```
+
+As indicated by this method's name, it takes a path to a folder or a file. You don't have to do anything on your end to differentiate between the two. Just give it a path and the SDK handles the rest. 
+
+### uploadJson
+
+You can create your own object that gets converted to a JSON file and Submarined with this method. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const content = {
+  key: "value"
+}
+const res = await submarine.uploadJson(content, "testJson.json")
+```
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+  "statusText": "string",
+  "totalItems": 0,
+  "item": {
+    "id": "string",
+    "createdAt": "2022-05-20T20:01:26.679Z",
+    "cid": "string",
+    "name": "string",
+    "mimeType": "string",
+    "originalname": "string",
+    "size": 0,
+    "metadata": {},
+    "pinToIPFS": false,
+    "isDuplicate": false
+  }
+}
+```
+
+Notice that unlike file uploads, there will not be an array of `items` in the response. There will only be a single `item` object.
+
+### updateFileName 
+
+As mentioned previously, you can pass in a custom name for your files, folders, and JSON. You can update that name with this method. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const item = foundContent.items[0];
+const id = item.id;
+const res = await submarine.updateFileName(id, "newName");
+```
+
+Response will look like this: 
+
+```json
+{
+  "status": 200,
+  "statusText": "string",
+  "totalItems": 0,
+  "item": {
+    "id": "string",
+    "createdAt": "2022-05-20T20:01:26.679Z",
+    "cid": "string",
+    "name": "string",
+    "mimeType": "string",
+    "originalname": "string",
+    "size": 0,
+    "metadata": {},
+    "pinToIPFS": false,
+    "isDuplicate": false
+  }
+}
+```
+
+### updateFileMetadata
+
+Just like with the Submarined file's name, you can update the Submarined file's metadata. It's important to understand that this is a complete overwrite function. You can't set just one keyvalue for the metadata without passing in the old values that you don't want changed also. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const item = foundContent.items[0];
+const id = item.id;
+
+const newMetadata = {
+    new: "value"
+  }
+const res = await submarine.updateFileMetadata(id, newMetadata);
+```
+
+Response will look like this: 
+
+```json
+{
+  "status": 200,
+  "statusText": "string",
+  "totalItems": 0,
+  "item": {
+    "id": "string",
+    "createdAt": "2022-05-20T20:01:26.679Z",
+    "cid": "string",
+    "name": "string",
+    "mimeType": "string",
+    "originalname": "string",
+    "size": 0,
+    "metadata": {},
+    "pinToIPFS": false,
+    "isDuplicate": false
+  }
+}
+```
+
+### makeFilePublic
+
+If you ever need to move a file from being Submarined onto the public IPFS network, this method will do it for you. Note that this process is not immediate. It is queued, and depending on the size of the file or folder, the process can take a few seconds to a few hours. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const item = foundContent.items[0];
+const id = item.id;
+
+const response = await submarine.makeFilePublic(id);
+```
+
+Response will look like this: 
+
+```json
+{
+  "status": 200,
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T20:01:26.679Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": true,
+      "isDuplicate": false
+    }
+  ]
+}
+```
+
+### deleteContent
+
+This method will allow you to delete Submarined files. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const cid = "YOUR CID";
+const foundContent = await submarine.getSubmarinedContentByCid(cid);
+const item = foundContent.items[0];
+const id = item.id;
+
+const res = await submarine.deleteContent(id);
+```
+
+Response will look like this: 
+
+```json
+{ "status": 200 }
+```
+
+## Additional Info
+
+### Querying Metadata
+
+Pinata supports the concept of metadata associated with files. Please do not confuse this with NFT metadata. This metadata is a grouping of keyvalue pairs that allow you to more easily find files. 
+
+To query by metadata, you will first need to build your metadata object with keyvalues pairs. Then, you will need to stringify it and add it as an options property within your options object. 
+
+**Example**
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const metadata = { 
+  customer_name: "Alice", 
+  customer_type: "Free"
+}
+
+const options = {
+  metadata: JSON.stringify(metadata)
+}
+
+const content = await submarine.getSubmarinedContent(options)
+```
