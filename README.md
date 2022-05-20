@@ -1,6 +1,6 @@
 # Pinata Submarine 
 
-[Submarine](https://ipfs.submarine.me/ipfs/QmeveDgcyWtCLnQJHEAemY1JjB9ys1pJQMaxNGtTaY1frt)
+![Submarine](https://ipfs.submarine.me/ipfs/QmeveDgcyWtCLnQJHEAemY1JjB9ys1pJQMaxNGtTaY1frt)
 
 **Do not try to use this SDK in the browser or your Submarine API key will be exposed**
 
