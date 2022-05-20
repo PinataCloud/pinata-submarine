@@ -36,7 +36,7 @@
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/node": "^17.0.31",
     "@types/prompts": "^2.0.14",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.22.0",
     "ava": "^4.2.0",
     "commitizen": "^4.2.4",
