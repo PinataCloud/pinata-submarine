@@ -57,6 +57,10 @@ console.log(findByCid);
 
 You'll notice this SDK requires the Pinata Submarine API Key and a Dedicated Gateway. These two things can only be had on paid Pinata accounts. 
 
+The Dedicated Gateway URL should be formatted like this: 
+
+`https://mydedicatedgatewayurl.com`
+
 ## Methods 
 
 ### getSubmarinedContentByCid

@@ -1,6 +1,6 @@
 {
   "name": "pinata-submarine",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
   "types": "./build/index.d.ts",
@@ -10,6 +10,10 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PinataCloud/pinata-submarine.git"
   },
   "scripts": {
     "build": "npm run clean && npm run type:dts && npm run build:main",
