@@ -225,7 +225,7 @@ const folder = foundContent.items[0];
 const folderId = folder.id;
 const timeInSeconds = 3600 //one hour
 
-const link = await submarine.generateAccessLink(timeInSeconds, id, cid);
+const link = await submarine.generateAccessLink(timeInSeconds, folderId, cid);
 ```
 
 The response will look like this: 
