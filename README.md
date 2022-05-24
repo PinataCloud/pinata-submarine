@@ -72,6 +72,7 @@ import { Submarine } from "pinata-submarine";
 const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
 
 const content = await submarine.getSubmarinedContentByCid("YOUR CID");
+console.log(contnet)
 ```
 
 The response will look like this: 
@@ -146,7 +147,8 @@ const options = {
   name: "Some file name"
 }
 
-const content = await submarine.getSubmarinedContent(options)
+const content = await submarine.getSubmarinedContent(options);
+console.log(content);
 ```
 
 The response will look like this: 
@@ -185,6 +187,7 @@ const folder = foundContent.items[0];
 const folderId = folder.id;
 
 const content = await submarine.listFolderContent(folderID);
+console.log(content);
 ```
 
 The response will look like this: 
@@ -226,6 +229,7 @@ const folderId = folder.id;
 const timeInSeconds = 3600 //one hour
 
 const link = await submarine.generateAccessLink(timeInSeconds, folderId, cid);
+console.log(link);
 ```
 
 The response will look like this: 
@@ -248,6 +252,7 @@ const folderId = folder.id;
 const timeInSeconds = 3600 //one hour
 
 const link = await submarine.generateAccessLink(timeInSeconds, id, cid, path);
+console.log(link);
 ```
 
 The response will look like this: 
@@ -267,6 +272,7 @@ import { Submarine } from "pinata-submarine";
 const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
 
 const res = await submarine.uploadFileOrFolder("./yourFilePath.some_extension");
+console.log(res);
 ```
 
 The method optionally allows you to pass in a custom name for the file and specify the [CID version](https://docs.ipfs.io/concepts/content-addressing/) (0 or 1 in number format).
@@ -307,7 +313,8 @@ const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL"
 const content = {
   key: "value"
 }
-const res = await submarine.uploadJson(content, "testJson.json")
+const res = await submarine.uploadJson(content, "testJson.json");
+console.log(res);
 ```
 
 The response will look like this: 
@@ -347,6 +354,7 @@ const foundContent = await submarine.getSubmarinedContentByCid(cid);
 const item = foundContent.items[0];
 const id = item.id;
 const res = await submarine.updateFileName(id, "newName");
+console.log(res);
 ```
 
 Response will look like this: 
@@ -388,6 +396,7 @@ const newMetadata = {
     new: "value"
   }
 const res = await submarine.updateFileMetadata(id, newMetadata);
+console.log(res);
 ```
 
 Response will look like this: 
@@ -425,7 +434,8 @@ const foundContent = await submarine.getSubmarinedContentByCid(cid);
 const item = foundContent.items[0];
 const id = item.id;
 
-const response = await submarine.makeFilePublic(id);
+const res = await submarine.makeFilePublic(id);
+console.log(res);
 ```
 
 Response will look like this: 
@@ -465,6 +475,7 @@ const item = foundContent.items[0];
 const id = item.id;
 
 const res = await submarine.deleteContent(id);
+console.log(res);
 ```
 
 Response will look like this: 
@@ -497,4 +508,5 @@ const options = {
 }
 
 const content = await submarine.getSubmarinedContent(options)
+console.log(content);
 ```
