@@ -8,12 +8,12 @@
   - [What is this?](#what-is-this)
   - [Getting Started](#getting-started)
   - [Methods](#methods)
+    - [uploadFileOrFolder](#uploadfileorfolder)
+    - [uploadJson](#uploadjson)
     - [getSubmarinedContentByCid](#getsubmarinedcontentbycid)
     - [getSubmarinedContent](#getsubmarinedcontent)
     - [listFolderContent](#listfoldercontent)
     - [generateAccessLink](#generateaccesslink)
-    - [uploadFileOrFolder](#uploadfileorfolder)
-    - [uploadJson](#uploadjson)
     - [updateFileName](#updatefilename)
     - [updateFileMetadata](#updatefilemetadata)
     - [makeFilePublic](#makefilepublic)
@@ -62,6 +62,84 @@ The Dedicated Gateway URL should be formatted like this:
 `https://mydedicatedgatewayurl.com`
 
 ## Methods 
+
+### uploadFileOrFolder
+
+This method expects a filepath. Since this SDK should only be used in the Node.js environment, the expectation is your client has already uploaded the file to you and you are storing it either in memory or in a temp directory on disk. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const res = await submarine.uploadFileOrFolder("./yourFilePath.some_extension");
+console.log(res);
+```
+
+The method optionally allows you to pass in a custom name for the file and specify the [CID version](https://docs.ipfs.io/concepts/content-addressing/) (0 or 1 in number format).
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T20:01:26.679Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+```
+
+As indicated by this method's name, it takes a path to a folder or a file. You don't have to do anything on your end to differentiate between the two. Just give it a path and the SDK handles the rest. 
+
+### uploadJson
+
+You can create your own object that gets converted to a JSON file and Submarined with this method. 
+
+```js
+import { Submarine } from "pinata-submarine";
+const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
+
+const content = {
+  key: "value"
+}
+const res = await submarine.uploadJson(content, "testJson.json");
+console.log(res);
+```
+
+The response will look like this: 
+
+```json
+{
+  "status": 200,
+  "statusText": "string",
+  "totalItems": 0,
+  "item": {
+    "id": "string",
+    "createdAt": "2022-05-20T20:01:26.679Z",
+    "cid": "string",
+    "name": "string",
+    "mimeType": "string",
+    "originalname": "string",
+    "size": 0,
+    "metadata": {},
+    "pinToIPFS": false,
+    "isDuplicate": false
+  }
+}
+```
+
+Notice that unlike file uploads, there will not be an array of `items` in the response. There will only be a single `item` object.
 
 ### getSubmarinedContentByCid
 
@@ -262,84 +340,6 @@ GATEWAY_URL/ipfs/CID/path?accessToken=TOKEN
 ```
 
 If you have uploaded a website or a web app, there will be an `index.html` file in the folder. You do not need to specify the path to load your site or app. This method will automatically look for an `index.html` file and generate a link that loads the full site or app. 
-
-### uploadFileOrFolder
-
-This method expects a filepath. Since this SDK should only be used in the Node.js environment, the expectation is your client has already uploaded the file to you and you are storing it either in memory or in a temp directory on disk. 
-
-```js
-import { Submarine } from "pinata-submarine";
-const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
-
-const res = await submarine.uploadFileOrFolder("./yourFilePath.some_extension");
-console.log(res);
-```
-
-The method optionally allows you to pass in a custom name for the file and specify the [CID version](https://docs.ipfs.io/concepts/content-addressing/) (0 or 1 in number format).
-
-The response will look like this: 
-
-```json
-{
-  "status": 200,
-  "totalItems": 0,
-  "items": [
-    {
-      "id": "string",
-      "createdAt": "2022-05-20T20:01:26.679Z",
-      "cid": "string",
-      "name": "string",
-      "mimeType": "string",
-      "originalname": "string",
-      "size": 0,
-      "metadata": {},
-      "pinToIPFS": false,
-      "isDuplicate": false
-    }
-  ]
-}
-```
-
-As indicated by this method's name, it takes a path to a folder or a file. You don't have to do anything on your end to differentiate between the two. Just give it a path and the SDK handles the rest. 
-
-### uploadJson
-
-You can create your own object that gets converted to a JSON file and Submarined with this method. 
-
-```js
-import { Submarine } from "pinata-submarine";
-const submarine = new Submarine("YOUR PINATA API KEY", "YOUR PINATA GATEWAY URL");
-
-const content = {
-  key: "value"
-}
-const res = await submarine.uploadJson(content, "testJson.json");
-console.log(res);
-```
-
-The response will look like this: 
-
-```json
-{
-  "status": 200,
-  "statusText": "string",
-  "totalItems": 0,
-  "item": {
-    "id": "string",
-    "createdAt": "2022-05-20T20:01:26.679Z",
-    "cid": "string",
-    "name": "string",
-    "mimeType": "string",
-    "originalname": "string",
-    "size": 0,
-    "metadata": {},
-    "pinToIPFS": false,
-    "isDuplicate": false
-  }
-}
-```
-
-Notice that unlike file uploads, there will not be an array of `items` in the response. There will only be a single `item` object.
 
 ### updateFileName 
 
