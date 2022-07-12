@@ -189,7 +189,7 @@ export class Submarine {
     return `${this.gatewayUrl}/ipfs/${submarinedCid}?accessToken=${tokenRes}`;
   }
 
-  async uploadFileOrFolder(filepath: PathLike, name?: String, cidVersion?: Number) {
+  async uploadFileOrFolder(filepath: PathLike, name?: String, metadata?: any, cidVersion?: Number) {
     try {
       let data = new FormData();
 
@@ -214,6 +214,10 @@ export class Submarine {
       data.append("wrapWithDirectory", "false");
       if (name) {
         data.append("name", name);
+      }
+
+      if (metadata) {
+        data.append("metadata", JSON.stringify(metadata));
       }
 
       const response = await postToAPI("content", data, this.submarineKey);
@@ -246,11 +250,7 @@ export class Submarine {
   }
 
   async updateFileMetadata(contentId: String, metadata: any) {
-    const body = {
-      keyvalues: metadata
-    }
-
-    return await putToAPI(`content/${contentId}/metadata`, body, this.submarineKey);
+    return await putToAPI(`content/${contentId}/metadata`, metadata, this.submarineKey);
   }
 
   async makeFilePublic(contentId: String) {

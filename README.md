@@ -12,6 +12,7 @@
     - [uploadJson](#uploadjson)
     - [getSubmarinedContentByCid](#getsubmarinedcontentbycid)
     - [getSubmarinedContent](#getsubmarinedcontent)
+    - [listFolderContent](#listfoldercontent)
     - [generateAccessLink](#generateaccesslink)
     - [updateFileName](#updatefilename)
     - [updateFileMetadata](#updatefilemetadata)
@@ -267,6 +268,8 @@ const options = {
 const content = await submarine.getSubmarinedContent(options);
 ```
 
+The response will look like this: 
+
 ```json
 {
   "status": 200,
@@ -287,10 +290,7 @@ const content = await submarine.getSubmarinedContent(options);
     }
   ]
 }
-
-
-
-
+```
 
 ### listFolderContent
 
