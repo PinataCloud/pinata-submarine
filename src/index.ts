@@ -147,14 +147,8 @@ export class Submarine {
       }
 
       if (options.metadata) {
-        const parsed = JSON.parse(options.metadata);
-        const newObject = {
-          keyvalues: parsed
-        }
-
-        queryString = queryString + `metadata=${JSON.stringify(newObject)}`
+        queryString = queryString + `metadata[keyvalues]=${options.metadata}`
       }
-
 
       const { items } = await getFromAPI(queryString, this.submarineKey);
 

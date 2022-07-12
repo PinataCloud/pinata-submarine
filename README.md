@@ -12,7 +12,6 @@
     - [uploadJson](#uploadjson)
     - [getSubmarinedContentByCid](#getsubmarinedcontentbycid)
     - [getSubmarinedContent](#getsubmarinedcontent)
-    - [listFolderContent](#listfoldercontent)
     - [generateAccessLink](#generateaccesslink)
     - [updateFileName](#updatefilename)
     - [updateFileMetadata](#updatefilemetadata)
@@ -252,6 +251,46 @@ The response will look like this:
   ]
 }
 ```
+
+**Example With Metadata Query**
+
+```js
+const options = {
+  metadata: JSON.stringify({
+    uuid: {
+      value: IDENTIFIER, 
+      op: "eq"
+    }
+  })
+}
+
+const content = await submarine.getSubmarinedContent(options);
+```
+
+```json
+{
+  "status": 200,
+
+  "totalItems": 0,
+  "items": [
+    {
+      "id": "string",
+      "createdAt": "2022-05-20T19:33:36.340Z",
+      "cid": "string",
+      "name": "string",
+      "mimeType": "string",
+      "originalname": "string",
+      "size": 0,
+      "metadata": {},
+      "pinToIPFS": false,
+      "isDuplicate": false
+    }
+  ]
+}
+
+
+
+
 
 ### listFolderContent
 
