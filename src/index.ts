@@ -7,6 +7,9 @@ import axios from 'axios';
 const rfs = require("recursive-fs");
 const path = require("path");
 const url = `https://managed.mypinata.cloud/api/v1`;
+const nftVerifyUrl = process.env.NODE_ENV === 'production' ? 'https://app.submarine.me/api' : 'http://localhost:3001/api'
+
+const EVMChains = ["Ethereum", "Polygon", "Avalanche"];
 
 const getFromAPI = async (endpoint: String, key: any) => {
   try {
@@ -263,5 +266,37 @@ export class Submarine {
 
   async deleteContent(contentId: String) {
     return await deleteFromAPI(`content/${contentId}`, this.submarineKey);
+  }
+
+  async verifyEVMNFT(signature: string, address: string, messageId: string, blockchain: string, contractAddress: string, network: string, tokenId?: string) {
+    if (EVMChains.includes(blockchain)) {
+      console.log({ messageId });
+      const response = await axios.post(`${nftVerifyUrl}/verify`, {
+        contractAddress: contractAddress,
+        network,
+        signature,
+        blockchain,
+        messageId,
+        address,
+        tokenId: tokenId
+      });
+      if (response.data === true) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      throw "Non EVM chain submitted"
+    }
+  }
+
+  async getEVMMessageToSign(blockchain: string, contractAddress: string) {
+    if (EVMChains.includes(blockchain)) {
+      const response = await axios.get(`${nftVerifyUrl}/verify?contract=${contractAddress}`);
+      return response.data;
+    } else if (blockchain === "Solana") {
+      const response = await axios.get(`${nftVerifyUrl}/verifySol?updateAuthority=${contractAddress}`);
+      return response.data;
+    }
   }
 }
